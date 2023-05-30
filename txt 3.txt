@@ -1,0 +1,120 @@
+#include <stdio.h>
+void findWaitingTime(int processes[], int n, int burstTime[], int waitingTime[]) {
+    int serviceTime[n];
+    serviceTime[0] = 0;
+    waitingTime[0] = 0;
+    for (int i = 1; i < n; i++) {
+        serviceTime[i] = serviceTime[i - 1] + burstTime[i - 1];
+        waitingTime[i] = serviceTime[i] - processes[i];
+        if (waitingTime[i] < 0)
+            waitingTime[i] = 0;
+    }
+}
+void findTurnaroundTime(int processes[], int n, int burstTime[], int waitingTime[], int turnaroundTime[]) {
+    for (int i = 0; i < n; i++)
+        turnaroundTime[i] = burstTime[i] + waitingTime[i];
+}
+void findAverageTime(int processes[], int n, int burstTime[]) {
+    int waitingTime[n], turnaroundTime[n];
+    int totalWaitingTime = 0, totalTurnaroundTime = 0;
+    findWaitingTime(processes, n, burstTime, waitingTime);
+    findTurnaroundTime(processes, n, burstTime, waitingTime, turnaroundTime);
+    printf("Process\tBurst Time\tWaiting Time\tTurnaround Time\n");
+    for (int i = 0; i < n; i++) {
+        totalWaitingTime += waitingTime[i];
+        totalTurnaroundTime += turnaroundTime[i];
+        printf("%d\t%d\t\t%d\t\t%d\n", processes[i], burstTime[i], waitingTime[i], turnaroundTime[i]);
+    }
+    double averageWaitingTime = (double)totalWaitingTime / n;
+    double averageTurnaroundTime = (double)totalTurnaroundTime / n;
+    printf("\nAverage Waiting Time: %.2lf\n", averageWaitingTime);
+    printf("Average Turnaround Time: %.2lf\n", averageTurnaroundTime);
+}
+int main() {
+    int n;
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+    int processes[n];
+    int burstTime[n];
+    printf("Enter the burst time for each process:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Process %d: ", i + 1);
+        scanf("%d", &burstTime[i]);
+        processes[i] = i + 1;
+    }
+    findAverageTime(processes, n, burstTime);
+    return 0;
+}
+
+
+
+
+
+
+def shortest_job_first(processes, burst_time):
+    n = len(processes)
+
+    # Create a list of tuples (process ID, burst time)
+    process_list = [(i + 1, burst_time[i]) for i in range(n)]
+
+    # Sort the processes based on burst time
+    process_list.sort(key=lambda x: x[1])
+
+    # Calculate waiting time and turnaround time for each process
+    waiting_time = [0] * n
+    turnaround_time = [0] * n
+
+    for i in range(1, n):
+        waiting_time[i] = process_list[i - 1][1] + waiting_time[i - 1]
+        turnaround_time[i] = waiting_time[i] + process_list[i][1]
+
+    # Calculate average waiting time and average turnaround time
+    total_waiting_time = sum(waiting_time)
+    total_turnaround_time = sum(turnaround_time)
+    average_waiting_time = total_waiting_time / n
+    average_turnaround_time = total_turnaround_time / n
+
+    # Print the results
+    print("Process\tBurst Time\tWaiting Time\tTurnaround Time")
+    for i in range(n):
+        process_id, burst_time = process_list[i]
+        print(f"{process_id}\t\t{burst_time}\t\t{waiting_time[i]}\t\t{turnaround_time[i]}")
+    
+    print(f"\nAverage Waiting Time: {average_waiting_time}")
+    print(f"Average Turnaround Time: {average_turnaround_time}")
+
+
+# Example usage
+processes = ['P1', 'P2', 'P3', 'P4', 'P5']
+burst_time = [7, 4, 1, 4, 10]
+shortest_job_first(processes, burst_time)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
